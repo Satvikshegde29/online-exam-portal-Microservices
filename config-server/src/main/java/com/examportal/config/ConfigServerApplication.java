@@ -1,5 +1,5 @@
 // filepath: config-server/src/main/java/com/examportal/config/ConfigServerApplication.java
-package com.exam_portal.config;
+package com.examportal.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
