@@ -1,6 +1,7 @@
 package com.exam_portal.user_service.service;
 
-import com.exam_portal.user_service.dto.UserDTO;
+import com.examportal.common.dto.UserDTO;
+
 
 public interface UserService {
     UserDTO registerUser(UserDTO userDTO);

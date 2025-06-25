@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.exam_portal.user_service.dto.UserDTO;
-import com.exam_portal.user_service.exception.ResourceNotFoundException;
+import com.examportal.common.dto.UserDTO;
+import com.examportal.common.dto.LoginRequestDTO;
+import com.examportal.common.exception.ResourceNotFoundException;
+import com.examportal.common.security.JwtUtil;
 import com.exam_portal.user_service.model.User;
 import com.exam_portal.user_service.repository.UserRepository;
-import com.exam_portal.user_service.security.JwtUtil;
 
 @Service
 public class UserServiceImpl implements UserService {

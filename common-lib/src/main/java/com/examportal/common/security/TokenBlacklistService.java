@@ -1,4 +1,4 @@
-package com.exam_portal.user_service.security;
+package com.examportal.common.security;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.exam_portal.user_service.exception;
+package com.examportal.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

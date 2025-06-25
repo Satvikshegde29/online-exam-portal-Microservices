@@ -1,5 +1,5 @@
 
-package com.exam_portal.user_service.exception;
+package com.examportal.common.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

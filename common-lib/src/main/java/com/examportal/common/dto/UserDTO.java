@@ -1,4 +1,5 @@
-package com.exam_portal.user_service.dto;
+package com.examportal.common.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
