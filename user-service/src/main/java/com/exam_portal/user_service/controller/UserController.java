@@ -1,15 +1,15 @@
 package com.exam_portal.user_service.controller;
 
-import com.exam_portal.user_service.dto.UserDTO;
-import com.exam_portal.user_service.dto.LoginRequestDTO;
-// import com.exam_portal.user_service.model.User;
-import com.exam_portal.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-// import java.util.List;
+import com.examportal.common.dto.UserDTO;
+import com.examportal.common.dto.LoginRequestDTO;
+import com.examportal.common.exception.ResourceNotFoundException;
+import com.exam_portal.user_service.service.UserService;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -37,14 +37,16 @@ public class UserController {
 
     // View Own Profile (no admin required)
     @GetMapping("/profile")
-    public ResponseEntity<UserDTO> getOwnProfile(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserDTO> getOwnProfile(@RequestHeader("Authorization") String tokenHeader) {
+        String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
         UserDTO user = userService.getUserProfileFromToken(token);
         return ResponseEntity.ok(user);
     }
 
     // Update Own Profile
     @PutMapping("/profile")
-    public ResponseEntity<UserDTO> updateOwnProfile(@RequestHeader("Authorization") String token, @RequestBody UserDTO updatedUser) {
+    public ResponseEntity<UserDTO> updateOwnProfile(@RequestHeader("Authorization") String tokenHeader, @RequestBody UserDTO updatedUser) {
+        String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
         UserDTO user = userService.updateUserProfile(token, updatedUser);
         return ResponseEntity.ok(user);
     }
