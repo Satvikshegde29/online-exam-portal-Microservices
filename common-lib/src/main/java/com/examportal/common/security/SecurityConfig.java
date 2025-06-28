@@ -31,8 +31,7 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/webjars/**",
                     "/configuration/ui",
-                    "/configuration/security",
-                    "/**" // <-- Add this line for development
+                    "/configuration/security"
                 ).permitAll()
                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
