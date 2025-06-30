@@ -1,4 +1,4 @@
-## 1 Admin Module (Low-Level Design)
+## 1 Admin Module
 
 ### Overview
 The Admin Module is responsible for all administrative operations in the system. It allows administrators to create, update, and delete exams and questions, as well as manage user roles (assigning roles such as STUDENT or EXAMINER). All endpoints are secured and accessible only to users with the `ROLE_ADMIN` authority.

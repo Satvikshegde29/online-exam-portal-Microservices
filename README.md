@@ -1,22 +1,22 @@
 # Online Exam Portal
 
 ## 📚 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Architecture Diagram](#architecture-diagram)
-- [Module Overview](#module-overview)
-  - [Admin Module](#admin-module)
-  - [User Module](#user-module)
-  - [Exam Management Module](#exam-management-module)
-  - [Question Bank Module](#question-bank-module)
-  - [Analytics and Reporting Module](#analytics-and-reporting-module)
-- [Setup Instructions](#setup-instructions)
-- [Start the Services](#start-the-services)
-- [Testing](#testing)
-- [Advanced Features](#advanced-features)
-- [Deployment](#deployment)
-- [Contributers](#Contributers)
+- [Overview](#-📝-overview)
+- [Features](#-✨-features)
+- [Technologies Used](#-💻-technologies-used)
+- [Architecture Diagram](#-🏗️-microservice-architecture-diagram)
+- [Module Overview](#-📦-module-overview)
+  - [Admin Module](#-🔧-admin-module)
+  - [User Module](#-👤-user-module)
+  - [Exam Management Module](#-📝-exam-management-module)
+  - [Question Bank Module](#-❓-question-bank-module)
+  - [Analytics and Reporting Module](#-📊-analytics-and-reporting-module)
+- [Setup Instructions](#-⚙️-setup-instructions)
+- [Start the Services](#-🚀-start-the-services)
+- [Testing](#-✅-testing)
+- [Advanced Features](#-🌟-advanced-features)
+- [Deployment](#-📦-deployment)
+- [Contributers](#-🤝-contributers)
 
 
 ---
@@ -86,11 +86,11 @@ Ensure the following are installed:
 1. Install and start MySQL.
 2. Create the required databases for the microservices:
    ```sql
-   CREATE DATABASE question_db;
-   CREATE DATABASE admin_db;
-   CREATE DATABASE user_db;
-   CREATE DATABASE exam_db;
-   CREATE DATABASE analytics_db;
+   CREATE DATABASE question_service;
+   CREATE DATABASE admin_service;
+   CREATE DATABASE user_service;
+   CREATE DATABASE response_service;
+   CREATE DATABASE report_service;
 3. Update the database credentials in the respective application.yml files for each microservice.
 
 #### Build the Project
