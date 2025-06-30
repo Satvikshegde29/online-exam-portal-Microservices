@@ -2,8 +2,11 @@ package com.exam_portal.admin_service.service;
 
 import com.exam_portal.admin_service.model.Exam;
 import com.exam_portal.admin_service.repository.ExamRepository;
+import com.exam_portal.admin_service.client.AdminClient;
+import com.examportal.common.dto.ExamDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.examportal.common.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,31 +16,60 @@ import java.util.Optional;
 public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
+    private final AdminClient adminClient; // AdminClient for validating admin users
 
     @Override
-    public Exam createExam(Exam exam) {
-        return examRepository.save(exam);
+    public ExamDTO createExam(ExamDTO examDTO) {
+        // Mock question validation
+        examDTO.getQuestionIds().forEach(questionId -> {
+            if (!isValidQuestionId(questionId)) {
+                throw new ResourceNotFoundException("Invalid question ID: " + questionId);
+            }
+        });
+
+        // Validate admin user
+        if (adminClient.getUserByEmail(examDTO.getCreatedBy()) == null) {
+            throw new ResourceNotFoundException("Invalid admin email: " + examDTO.getCreatedBy());
+        }
+
+        // Save exam
+        Exam exam = new Exam();
+        exam.setTitle(examDTO.getTitle());
+        exam.setDescription(examDTO.getDescription());
+        exam.setDuration(examDTO.getDuration());
+        exam.setTotalMarks(examDTO.getTotalMarks());
+        exam.setQuestionIds(examDTO.getQuestionIds());
+        exam.setCreatedBy(examDTO.getCreatedBy());
+        exam = examRepository.save(exam);
+
+        return mapToDTO(exam);
+    }
+
+    private boolean isValidQuestionId(Long questionId) {
+        // Mock validation logic
+        return questionId != null && questionId > 0;
     }
 
     @Override
-    public List<Exam> getAllExams() {
-        return examRepository.findAll();
+    public List<ExamDTO> getAllExams() {
+        return examRepository.findAll().stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public Optional<Exam> getExamById(Long id) {
-        return examRepository.findById(id);
+    public Optional<ExamDTO> getExamById(Long id) {
+        return examRepository.findById(id).map(this::mapToDTO);
     }
 
     @Override
-    public Optional<Exam> updateExam(Long id, Exam examDetails) {
+    public Optional<ExamDTO> updateExam(Long id, ExamDTO examDTO) {
         return examRepository.findById(id).map(exam -> {
-            exam.setTitle(examDetails.getTitle());
-            exam.setDescription(examDetails.getDescription());
-            exam.setDuration(examDetails.getDuration());
-            exam.setTotalMarks(examDetails.getTotalMarks());
-            // Set examiner/questions if needed
-            return examRepository.save(exam);
+            exam.setTitle(examDTO.getTitle());
+            exam.setDescription(examDTO.getDescription());
+            exam.setDuration(examDTO.getDuration());
+            exam.setTotalMarks(examDTO.getTotalMarks());
+            exam.setQuestionIds(examDTO.getQuestionIds());
+            exam.setCreatedBy(examDTO.getCreatedBy());
+            return mapToDTO(examRepository.save(exam));
         });
     }
 
@@ -47,5 +79,17 @@ public class ExamServiceImpl implements ExamService {
             examRepository.delete(exam);
             return true;
         }).orElse(false);
+    }
+
+    private ExamDTO mapToDTO(Exam exam) {
+        return new ExamDTO(
+                exam.getExamId(),
+                exam.getTitle(),
+                exam.getDescription(),
+                exam.getDuration(),
+                exam.getTotalMarks(),
+                exam.getQuestionIds(),
+                exam.getCreatedBy()
+        );
     }
 }
