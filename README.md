@@ -1,22 +1,22 @@
 # Online Exam Portal
 
 ## 📚 Table of Contents
-- [Overview](#-📝-overview)
-- [Features](#-✨-features)
-- [Technologies Used](#-💻-technologies-used)
-- [Architecture Diagram](#-🏗️-microservice-architecture-diagram)
-- [Module Overview](#-📦-module-overview)
-  - [Admin Module](#-🔧-admin-module)
-  - [User Module](#-👤-user-module)
-  - [Exam Management Module](#-📝-exam-management-module)
-  - [Question Bank Module](#-❓-question-bank-module)
-  - [Analytics and Reporting Module](#-📊-analytics-and-reporting-module)
-- [Setup Instructions](#-⚙️-setup-instructions)
-- [Start the Services](#-🚀-start-the-services)
-- [Testing](#-✅-testing)
-- [Advanced Features](#-🌟-advanced-features)
-- [Deployment](#-📦-deployment)
-- [Contributers](#-🤝-contributers)
+- [Overview](#📝-overview)
+- [Features](#✨-features)
+- [Technologies Used](#💻-technologies-used)
+- [Architecture Diagram](#🏗️-microservice-architecture-diagram)
+- [Module Overview](#📦-module-overview)
+  - [Admin Module](#🔧-admin-module)
+  - [User Module](#👤-user-module)
+  - [Exam Management Module](#📝-exam-management-module)
+  - [Question Bank Module](#❓-question-bank-module)
+  - [Analytics and Reporting Module](#📊-analytics-and-reporting-module)
+- [Setup Instructions](#⚙️-setup-instructions)
+- [Start the Services](#🚀-start-the-services)
+- [Testing](#✅-testing)
+- [Advanced Features](#🌟-advanced-features)
+- [Deployment](#📦-deployment)
+- [Contributers](#🤝-contributers)
 
 
 ---
