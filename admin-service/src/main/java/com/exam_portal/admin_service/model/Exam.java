@@ -1,13 +1,9 @@
 package com.exam_portal.admin_service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "exams")
@@ -25,5 +21,8 @@ public class Exam {
     private int duration; // in minutes
     private int totalMarks;
 
-    // Add relations to User/Question if those entities exist in this microservice
+    @ElementCollection
+    private List<Long> questionIds; // List of question IDs (foreign keys)
+
+    private String createdBy; // Admin who created the exam
 }

@@ -5,4 +5,5 @@ com\examportal\common\security\JwtUtil.class
 com\examportal\common\dto\LoginRequestDTO.class
 com\examportal\common\exception\ResourceNotFoundException.class
 com\examportal\common\security\JwtRequestFilter.class
+com\examportal\common\dto\ExamDTO.class
 com\examportal\common\dto\UserDTO.class

@@ -1,9 +1,10 @@
 package com.exam_portal.admin_service.client;
 
+import com.examportal.common.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import com.examportal.common.dto.UserDTO;
 
 @FeignClient(
     name = "user-service",
@@ -28,6 +29,9 @@ public interface AdminClient {
 
     @GetMapping("${question.service.url:/api/questions}/{id}")
     Object getQuestionById(@PathVariable("id") Long id);
+
+    @GetMapping("/api/users/email/{email}")
+    UserDTO getUserByEmail(@PathVariable("email") String email);
 
     // Add more question-service endpoints as needed
 }
