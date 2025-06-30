@@ -9,6 +9,9 @@ import com.examportal.common.dto.UserDTO;
 import com.examportal.common.dto.LoginRequestDTO;
 import com.examportal.common.exception.ResourceNotFoundException;
 import com.exam_portal.user_service.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 
 @RestController
@@ -48,6 +51,28 @@ public class UserController {
     public ResponseEntity<UserDTO> updateOwnProfile(@RequestHeader("Authorization") String tokenHeader, @RequestBody UserDTO updatedUser) {
         String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
         UserDTO user = userService.updateUserProfile(token, updatedUser);
+        return ResponseEntity.ok(user);
+    }
+
+    // Get all users (for admin)
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    // Get user by ID (for admin)
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        UserDTO user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    // Assign role to user (for admin)
+    @PutMapping("/{id}/role")
+    public ResponseEntity<UserDTO> assignRole(@PathVariable Long id, @RequestParam String role) {
+        UserDTO user = userService.assignRole(id, role);
         return ResponseEntity.ok(user);
     }
 

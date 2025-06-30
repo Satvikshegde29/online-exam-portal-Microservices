@@ -2,6 +2,8 @@ package com.exam_portal.user_service.service;
 
 import com.examportal.common.dto.UserDTO;
 
+import java.util.List;
+
 
 public interface UserService {
     UserDTO registerUser(UserDTO userDTO);
@@ -10,5 +12,7 @@ public interface UserService {
     UserDTO updateUserProfile(String token, UserDTO updatedUser);
     UserDTO getUserByEmail(String email);
     UserDTO getUserById(Long id);
+    List<UserDTO> getAllUsers();
+    UserDTO assignRole(Long id, String role);
 }
 

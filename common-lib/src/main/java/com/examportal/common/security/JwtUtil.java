@@ -30,7 +30,9 @@ public class JwtUtil {
     // Validate JWT Token
     public boolean validateToken(String token, String email) {
         String tokenEmail = extractEmail(token);
-        return (tokenEmail.equals(email) && !isTokenExpired(token));
+        boolean valid = (tokenEmail.equals(email) && !isTokenExpired(token));
+        System.out.println("JwtUtil: tokenEmail=" + tokenEmail + ", inputEmail=" + email + ", valid=" + valid);
+        return valid;
     }
 
     // Extract Email from Token

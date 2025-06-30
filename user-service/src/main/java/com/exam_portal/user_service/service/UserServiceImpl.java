@@ -11,6 +11,8 @@ import com.examportal.common.security.JwtUtil;
 import com.exam_portal.user_service.model.User;
 import com.exam_portal.user_service.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,7 +31,8 @@ public class UserServiceImpl implements UserService {
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setPassword(null); // Never expose password
+        dto.setPassword(null); // Never expose password in API responses
+        dto.setRole(user.getRole()); // Expose role
         return dto;
     }
 
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        // role will be set to default "STUDENT" by entity definition
+        user.setRole(dto.getRole() != null ? dto.getRole() : "STUDENT"); // set role from DTO or default
         return user;
     }
 
@@ -94,6 +97,20 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return mapToDTO(user);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream().map(this::mapToDTO).toList();
+    }
+
+    @Override
+    public UserDTO assignRole(Long id, String role) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setRole(role);
+        user = userRepository.save(user);
         return mapToDTO(user);
     }
 }

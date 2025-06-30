@@ -38,6 +38,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 email = jwtUtil.extractEmail(token);
             }
 
+            System.out.println("JwtRequestFilter: Authorization=" + authorizationHeader);
+            System.out.println("JwtRequestFilter: token=" + token + ", email=" + email);
+
             // Check if the token is blacklisted
             if (token != null && tokenBlacklistService.isTokenBlacklisted(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -16,5 +16,6 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
-    private String password;
+    private String password; // keep for registration/update, but set to null in responses
+    private String role;     // <-- add this field
 }
