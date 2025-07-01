@@ -3,10 +3,7 @@ package com.exam_portal.question_service.service.impl;
 import com.exam_portal.question_service.model.Question;
 import com.exam_portal.question_service.repository.QuestionRepository;
 import com.exam_portal.question_service.service.QuestionService;
-<<<<<<< HEAD
 import com.examportal.common.dto.QuestionDTO;
-=======
->>>>>>> cd9d10376ca8453da5f74067d8fdee8b04454de7
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +11,6 @@ import java.util.List;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-<<<<<<< HEAD
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -56,28 +52,6 @@ public class QuestionServiceImpl implements QuestionService {
                 return mapToDTO(questionRepository.save(existing));
             })
             .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
-=======
-
-    @Autowired
-    private QuestionRepository questionRepository;
-
-    @Override
-    public Question createQuestion(Question question) {
-        return questionRepository.save(question);
-    }
-
-    @Override
-    public Question updateQuestion(Long id, Question questionDetails) {
-        return questionRepository.findById(id)
-                .map(question -> {
-                    question.setText(questionDetails.getText());
-                    question.setCategory(questionDetails.getCategory());
-                    question.setDifficulty(questionDetails.getDifficulty());
-                    question.setCorrectAnswer(questionDetails.getCorrectAnswer());
-                    return questionRepository.save(question);
-                })
-                .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
->>>>>>> cd9d10376ca8453da5f74067d8fdee8b04454de7
     }
 
     @Override
@@ -89,7 +63,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-<<<<<<< HEAD
     public QuestionDTO getQuestionById(Long id) {
         return questionRepository.findById(id)
             .map(this::mapToDTO)
@@ -110,25 +83,5 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionDTO> exportQuestions() {
         return questionRepository.findAll().stream().map(this::mapToDTO).toList();
-=======
-    public Question getQuestionById(Long id) {
-        return questionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
-    }
-
-    @Override
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
-    }
-
-    @Override
-    public void importQuestions(List<Question> questions) {
-        questionRepository.saveAll(questions);
-    }
-
-    @Override
-    public List<Question> exportQuestions() {
-        return questionRepository.findAll();
->>>>>>> cd9d10376ca8453da5f74067d8fdee8b04454de7
     }
 }
