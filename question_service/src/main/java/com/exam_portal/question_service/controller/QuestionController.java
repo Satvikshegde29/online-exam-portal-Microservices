@@ -73,4 +73,10 @@ public class QuestionController {
     public ResponseEntity<List<QuestionDTO>> exportQuestions() {
         return ResponseEntity.ok(questionService.exportQuestions());
     }
+
+    // Get questions by a list of IDs
+    @PostMapping("/batch")
+    public ResponseEntity<List<QuestionDTO>> getQuestionsByIds(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(questionService.getQuestionsByIds(ids));
+    }
 }

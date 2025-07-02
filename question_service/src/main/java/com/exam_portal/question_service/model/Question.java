@@ -18,4 +18,5 @@ public class Question {
     private String category; // Exam created by admin
     private String difficulty;
     private String correctAnswer;
+    private Integer marks; // <-- Add this line
 }

@@ -20,7 +20,8 @@ public class QuestionServiceImpl implements QuestionService {
             question.getText(),
             question.getCategory(),
             question.getDifficulty(),
-            question.getCorrectAnswer()
+            question.getCorrectAnswer(),
+            question.getMarks() // <-- Add this
         );
     }
 
@@ -30,7 +31,8 @@ public class QuestionServiceImpl implements QuestionService {
             dto.getText(),
             dto.getCategory(),
             dto.getDifficulty(),
-            dto.getCorrectAnswer()
+            dto.getCorrectAnswer(),
+            dto.getMarks() // <-- Add this
         );
     }
 
@@ -83,5 +85,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionDTO> exportQuestions() {
         return questionRepository.findAll().stream().map(this::mapToDTO).toList();
+    }
+
+    @Override
+    public List<QuestionDTO> getQuestionsByIds(List<Long> ids) {
+        return questionRepository.findAllById(ids).stream().map(this::mapToDTO).toList();
     }
 }

@@ -11,4 +11,5 @@ public interface ExamService {
     Optional<ExamDTO> getExamById(Long id);
     Optional<ExamDTO> updateExam(Long id, ExamDTO examDTO);
     boolean deleteExam(Long id);
+    Optional<ExamDTO> updateExamQuestions(Long examId, List<Long> questionIds);
 }

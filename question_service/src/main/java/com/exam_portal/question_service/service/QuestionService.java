@@ -12,4 +12,5 @@ public interface QuestionService {
     List<QuestionDTO> getAllQuestions();
     void importQuestions(List<QuestionDTO> questions);
     List<QuestionDTO> exportQuestions();
+    List<QuestionDTO> getQuestionsByIds(List<Long> ids);
 }

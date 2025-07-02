@@ -23,6 +23,4 @@ public class Exam {
 
     @ElementCollection
     private List<Long> questionIds; // List of question IDs (foreign keys)
-
-    private String createdBy; // Admin who created the exam
 }

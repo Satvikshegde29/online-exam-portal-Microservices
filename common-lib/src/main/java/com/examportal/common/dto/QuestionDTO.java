@@ -13,4 +13,5 @@ public class QuestionDTO {
     private String category; // Represents the exam created by the admin
     private String difficulty;
     private String correctAnswer;
+    private Integer marks; // <-- Add this line
 }

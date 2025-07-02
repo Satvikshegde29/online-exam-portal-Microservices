@@ -3,7 +3,9 @@ package com.exam_portal.admin_service.service;
 import com.exam_portal.admin_service.model.Exam;
 import com.exam_portal.admin_service.repository.ExamRepository;
 import com.exam_portal.admin_service.client.AdminClient;
+import com.exam_portal.admin_service.client.QuestionClient;
 import com.examportal.common.dto.ExamDTO;
+import com.examportal.common.dto.QuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.examportal.common.exception.ResourceNotFoundException;
@@ -17,20 +19,26 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
     private final AdminClient adminClient; // AdminClient for validating admin users
+    private final QuestionClient questionClient;
 
     @Override
     public ExamDTO createExam(ExamDTO examDTO) {
-        // Mock question validation
-        examDTO.getQuestionIds().forEach(questionId -> {
+        // Defensive: treat null as empty list
+        List<Long> questionIds = examDTO.getQuestionIds();
+        if (questionIds == null) {
+            questionIds = List.of();
+            examDTO.setQuestionIds(questionIds);
+        }
+        questionIds.forEach(questionId -> {
             if (!isValidQuestionId(questionId)) {
                 throw new ResourceNotFoundException("Invalid question ID: " + questionId);
             }
         });
 
-        // Validate admin user
-        if (adminClient.getUserByEmail(examDTO.getCreatedBy()) == null) {
-            throw new ResourceNotFoundException("Invalid admin email: " + examDTO.getCreatedBy());
-        }
+        // REMOVE createdBy validation
+        // if (adminClient.getUserByEmail(examDTO.getCreatedBy()) == null) {
+        //     throw new ResourceNotFoundException("Invalid admin email: " + examDTO.getCreatedBy());
+        // }
 
         // Save exam
         Exam exam = new Exam();
@@ -39,7 +47,6 @@ public class ExamServiceImpl implements ExamService {
         exam.setDuration(examDTO.getDuration());
         exam.setTotalMarks(examDTO.getTotalMarks());
         exam.setQuestionIds(examDTO.getQuestionIds());
-        exam.setCreatedBy(examDTO.getCreatedBy());
         exam = examRepository.save(exam);
 
         return mapToDTO(exam);
@@ -68,7 +75,6 @@ public class ExamServiceImpl implements ExamService {
             exam.setDuration(examDTO.getDuration());
             exam.setTotalMarks(examDTO.getTotalMarks());
             exam.setQuestionIds(examDTO.getQuestionIds());
-            exam.setCreatedBy(examDTO.getCreatedBy());
             return mapToDTO(examRepository.save(exam));
         });
     }
@@ -81,7 +87,19 @@ public class ExamServiceImpl implements ExamService {
         }).orElse(false);
     }
 
+    @Override
+    public Optional<ExamDTO> updateExamQuestions(Long examId, List<Long> questionIds) {
+        return examRepository.findById(examId).map(exam -> {
+            exam.setQuestionIds(questionIds);
+            return mapToDTO(examRepository.save(exam));
+        });
+    }
+
     private ExamDTO mapToDTO(Exam exam) {
+        List<QuestionDTO> questions = null;
+        if (exam.getQuestionIds() != null && !exam.getQuestionIds().isEmpty()) {
+            questions = questionClient.getQuestionsByIds(exam.getQuestionIds());
+        }
         return new ExamDTO(
                 exam.getExamId(),
                 exam.getTitle(),
@@ -89,7 +107,7 @@ public class ExamServiceImpl implements ExamService {
                 exam.getDuration(),
                 exam.getTotalMarks(),
                 exam.getQuestionIds(),
-                exam.getCreatedBy()
+                questions
         );
     }
 }

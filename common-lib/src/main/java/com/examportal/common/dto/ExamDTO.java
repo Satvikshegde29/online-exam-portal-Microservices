@@ -14,5 +14,5 @@ public class ExamDTO {
     private int duration;
     private int totalMarks;
     private List<Long> questionIds; // List of question IDs
-    private String createdBy; // Admin who created the exam
+    private List<QuestionDTO> questions;
 }

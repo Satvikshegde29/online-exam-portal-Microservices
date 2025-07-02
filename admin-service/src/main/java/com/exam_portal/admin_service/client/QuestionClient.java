@@ -31,4 +31,7 @@ public interface QuestionClient {
 
     @GetMapping("/api/questions/export")
     List<QuestionDTO> exportQuestions();
+
+    @PostMapping("/api/questions/batch")
+    List<QuestionDTO> getQuestionsByIds(@RequestBody List<Long> ids);
 }
