@@ -3,6 +3,8 @@ package com.exam_portal.question_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "questions")
 @Data
@@ -15,8 +17,13 @@ public class Question {
     private Long questionId;
 
     private String text;
-    private String category; // Exam created by admin
+    private String category;
     private String difficulty;
     private String correctAnswer;
-    private Integer marks; // <-- Add this line
+    private Integer marks;
+
+    @ElementCollection
+    @CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
+    @Column(name = "option_text")
+    private List<String> options;
 }

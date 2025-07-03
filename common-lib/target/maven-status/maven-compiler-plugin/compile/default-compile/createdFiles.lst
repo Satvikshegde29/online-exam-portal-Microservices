@@ -3,6 +3,7 @@ com\examportal\common\security\SecurityConfig.class
 com\examportal\common\security\TokenBlacklistService.class
 com\examportal\common\security\JwtUtil.class
 com\examportal\common\dto\LoginRequestDTO.class
+com\examportal\common\dto\ExamUpdateResponse.class
 com\examportal\common\dto\QuestionDTO.class
 com\examportal\common\exception\ResourceNotFoundException.class
 com\examportal\common\security\JwtRequestFilter.class

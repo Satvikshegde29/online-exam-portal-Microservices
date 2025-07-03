@@ -21,7 +21,8 @@ public class QuestionServiceImpl implements QuestionService {
             question.getCategory(),
             question.getDifficulty(),
             question.getCorrectAnswer(),
-            question.getMarks() // <-- Add this
+            question.getMarks(),
+            question.getOptions() // <-- Add this
         );
     }
 
@@ -32,7 +33,8 @@ public class QuestionServiceImpl implements QuestionService {
             dto.getCategory(),
             dto.getDifficulty(),
             dto.getCorrectAnswer(),
-            dto.getMarks() // <-- Add this
+            dto.getMarks(),
+            dto.getOptions() // <-- Add this
         );
     }
 
@@ -51,6 +53,8 @@ public class QuestionServiceImpl implements QuestionService {
                 existing.setCategory(questionDTO.getCategory());
                 existing.setDifficulty(questionDTO.getDifficulty());
                 existing.setCorrectAnswer(questionDTO.getCorrectAnswer());
+                existing.setMarks(questionDTO.getMarks());
+                existing.setOptions(questionDTO.getOptions()); // <-- Add this line
                 return mapToDTO(questionRepository.save(existing));
             })
             .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));

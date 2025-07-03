@@ -3,6 +3,7 @@ package com.examportal.common.dto;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -10,8 +11,9 @@ import lombok.NoArgsConstructor;
 public class QuestionDTO {
     private Long questionId;
     private String text;
-    private String category; // Represents the exam created by the admin
+    private String category;
     private String difficulty;
     private String correctAnswer;
-    private Integer marks; // <-- Add this line
+    private Integer marks;
+    private List<String> options; // <-- Add this line
 }
