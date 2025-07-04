@@ -5,21 +5,19 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Response {
+public class Result {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long responseId;
+    private Long resultId;
 
     private Long examId;
 
     private Long userId;
 
-    private Long questionId;
-
-    private String answer;
+    private Double totalMarks;
 
     private Double marksObtained;
 
-    private boolean submitted; // New field to track if the exam is submitted
+    private String feedback; // Optional feedback from the user
 }

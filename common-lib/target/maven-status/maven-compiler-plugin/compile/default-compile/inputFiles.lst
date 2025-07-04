@@ -2,6 +2,7 @@ C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\ja
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\dto\ExamUpdateResponse.java
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\dto\LoginRequestDTO.java
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\dto\QuestionDTO.java
+C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\dto\ResultDTO.java
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\dto\UserDTO.java
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\exception\GlobalExceptionHandler.java
 C:\Users\2407093\project\online-exam-portal-Microservices\common-lib\src\main\java\com\examportal\common\exception\ResourceNotFoundException.java
