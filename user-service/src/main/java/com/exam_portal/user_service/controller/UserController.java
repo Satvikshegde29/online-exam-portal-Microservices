@@ -30,7 +30,7 @@ public class UserController {
     // User Login
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequestDTO loginRequest) {
-        String token = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+        String token = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword(), loginRequest.getId());
         if (token != null) {
             return ResponseEntity.ok("Bearer " + token);
         } else {

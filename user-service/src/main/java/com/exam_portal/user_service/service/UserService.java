@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
     UserDTO registerUser(UserDTO userDTO);
-    String loginUser(String email, String password);
+    String loginUser(String email, String password, Long id);
     UserDTO getUserProfileFromToken(String token);
     UserDTO updateUserProfile(String token, UserDTO updatedUser);
     UserDTO getUserByEmail(String email);

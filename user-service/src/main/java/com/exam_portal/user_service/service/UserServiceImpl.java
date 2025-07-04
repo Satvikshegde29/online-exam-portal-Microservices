@@ -55,11 +55,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String loginUser(String email, String password) {
+    public String loginUser(String email, String password, Long id) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(user.getEmail(), user.getRole());
+            return jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
         }
         return null;
     }

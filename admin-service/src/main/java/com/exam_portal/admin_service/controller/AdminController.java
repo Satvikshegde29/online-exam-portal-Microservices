@@ -47,28 +47,33 @@ public class AdminController {
     // --- Exam Management (using ExamDTO) ---
 
     @PostMapping("/exams")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExamDTO> createExam(@RequestBody ExamDTO examDTO) {
         return ResponseEntity.ok(examService.createExam(examDTO));
     }
 
     @GetMapping("/exams")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<ExamDTO>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
     }
 
     @GetMapping("/exams/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<ExamDTO> getExamById(@PathVariable Long id) {
         Optional<ExamDTO> exam = examService.getExamById(id);
         return exam.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/exams/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExamDTO> updateExam(@PathVariable Long id, @RequestBody ExamDTO examDTO) {
         Optional<ExamDTO> updated = examService.updateExam(id, examDTO);
         return updated.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/exams/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteExam(@PathVariable Long id) {
         if (examService.deleteExam(id)) {
             return ResponseEntity.ok().build();
@@ -95,13 +100,13 @@ public class AdminController {
     }
 
     @GetMapping("/questions")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
         return ResponseEntity.ok(questionClient.getAllQuestions());
     }
 
     @GetMapping("/questions/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Long id) {
         return ResponseEntity.ok(questionClient.getQuestionById(id));
     }
@@ -127,7 +132,7 @@ public class AdminController {
     }
 
     @GetMapping("/questions/export")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<QuestionDTO>> exportQuestions() {
         return ResponseEntity.ok(questionClient.exportQuestions());
     }

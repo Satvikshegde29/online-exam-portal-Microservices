@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/questions")
-@PreAuthorize("hasRole('ADMIN')") // All endpoints require admin
 public class QuestionController {
 
     @Autowired
@@ -20,18 +19,21 @@ public class QuestionController {
 
     // Create a new question
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
         return ResponseEntity.ok(questionService.createQuestion(questionDTO));
     }
 
     // Get all questions
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
         return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
     // Get a question by ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(questionService.getQuestionById(id));
@@ -42,6 +44,7 @@ public class QuestionController {
 
     // Update a question by ID
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable Long id, @RequestBody QuestionDTO questionDTO) {
         try {
             return ResponseEntity.ok(questionService.updateQuestion(id, questionDTO));
@@ -52,6 +55,7 @@ public class QuestionController {
 
     // Delete a question by ID
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
         try {
             questionService.deleteQuestion(id);
@@ -63,6 +67,7 @@ public class QuestionController {
 
     // Import questions in bulk
     @PostMapping("/import")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> importQuestions(@RequestBody List<QuestionDTO> questions) {
         questionService.importQuestions(questions);
         return ResponseEntity.ok().build();
@@ -70,12 +75,14 @@ public class QuestionController {
 
     // Export questions in bulk
     @GetMapping("/export")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<QuestionDTO>> exportQuestions() {
         return ResponseEntity.ok(questionService.exportQuestions());
     }
 
     // Get questions by a list of IDs
     @PostMapping("/batch")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT', 'EXAMINER')")
     public ResponseEntity<List<QuestionDTO>> getQuestionsByIds(@RequestBody List<Long> ids) {
         return ResponseEntity.ok(questionService.getQuestionsByIds(ids));
     }

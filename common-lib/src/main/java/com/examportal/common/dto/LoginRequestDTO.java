@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRequestDTO {
+    private Long id; // User ID, if needed for login
     private String email;
     private String password;
 
