@@ -12,6 +12,7 @@ import com.exam_portal.user_service.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -29,12 +30,19 @@ public class UserController {
 
     // User Login
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
         String token = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword(), loginRequest.getId());
         if (token != null) {
-            return ResponseEntity.ok("Bearer " + token);
+            // Add "Bearer " prefix to the token in the response
+            return ResponseEntity.ok(
+                Map.of(
+                    "token", "Bearer " + token,
+                    "message", "Login successful"
+                )
+            );
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid credentials"));
         }
     }
 
