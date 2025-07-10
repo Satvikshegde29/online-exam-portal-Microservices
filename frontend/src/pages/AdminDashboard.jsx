@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { mockExams, mockUsers } from '../utils/mockData';
@@ -10,8 +11,35 @@ const AdminDashboard = () => {
     activeExams: mockExams.filter(exam => exam.status === 'active').length,
     totalQuestions: 45
   });
+  const [exams, setExams] = useState([]);
+  const [filteredExams, setFilteredExams] = useState([]);
 
   const recentExams = mockExams.slice(0, 3);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:8090/api/admin/exams', {
+      headers: {
+        'Authorization': token ? `Bearer ${token}` : undefined,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.text().then(text => { throw new Error(text || res.statusText); });
+        }
+        return res.json();
+      })
+      .then(data => {
+        setExams(data);
+        setFilteredExams(data);
+      })
+      .catch(err => {
+        console.error('Fetch error:', err.message);
+        // Optionally show an error message to the user
+      });
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -20,7 +48,7 @@ const AdminDashboard = () => {
           <h1 className="text-3xl font-bold gradient-text">Admin Dashboard</h1>
           <p className="text-gray-600 mt-2">Manage your exam portal efficiently</p>
         </div>
-        <Button>Create New Exam</Button>
+        <Button onClick={() => navigate('/admin/exams')}>Create New Exam</Button>
       </div>
 
       {/* Stats Grid */}

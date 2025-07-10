@@ -9,14 +9,15 @@ const Sidebar = () => {
     { name: 'Exams', path: '/admin/exams', icon: '📝' },
     { name: 'Questions', path: '/admin/questions', icon: '❓' },
     { name: 'Users', path: '/admin/users', icon: '👥' },
-    { name: 'Analytics', path: '/admin/analytics', icon: '📈' }
+    { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
+    { name: 'Profile', path: '/profile', icon: '👤' }
   ];
 
   const studentNavItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '🏠' },
     { name: 'My Exams', path: '/dashboard/exams', icon: '📚' },
     { name: 'Results', path: '/dashboard/results', icon: '🏆' },
-    { name: 'Profile', path: '/dashboard/profile', icon: '👤' }
+    { name: 'Profile', path: '/profile', icon: '👤' }
   ];
 
   const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems;

@@ -26,7 +26,7 @@ const Header = () => {
                   </span>
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-gray-900">{user.name || 'User'}</p>
+                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
                   <p className="text-xs text-gray-600 capitalize">{user.role || ''}</p>
                 </div>
               </div>

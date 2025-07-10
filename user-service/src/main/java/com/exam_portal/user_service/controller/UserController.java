@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Map;
+import com.exam_portal.user_service.model.User;
 
 
 @RestController
@@ -32,11 +33,13 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
         String token = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword(), loginRequest.getId());
-        if (token != null) {
-            // Add "Bearer " prefix to the token in the response
+        // Fetch user by email to get the role
+        User user = userService.findByEmail(loginRequest.getEmail());
+        if (token != null && user != null) {
             return ResponseEntity.ok(
                 Map.of(
                     "token", "Bearer " + token,
+                    "role", user.getRole(), // <-- Add this line
                     "message", "Login successful"
                 )
             );
@@ -49,8 +52,12 @@ public class UserController {
     // View Own Profile (no admin required)
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getOwnProfile(@RequestHeader("Authorization") String tokenHeader) {
+        // Remove "Bearer " prefix if present
         String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
-        UserDTO user = userService.getUserProfileFromToken(token);
+        // Extract email from JWT
+        String email = userService.getEmailFromToken(token);
+        // Fetch user from DB by email
+        UserDTO user = userService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }
 

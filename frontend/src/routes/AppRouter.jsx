@@ -16,6 +16,7 @@ import AnalyticsPage from '../pages/AnalyticsPage';
 import ExamManagementPage from '../pages/ExamManagementPage';
 import UserManagementPage from '../pages/UserManagementPage';
 import EnhancedAnalyticsPage from '../pages/EnhancedAnalyticsPage';
+import ProfilePage from '../pages/ProfilePage';
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading } = useAuth();
@@ -32,8 +33,11 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+  // Normalize role to lowercase for comparison
+  const userRole = user.role?.toLowerCase();
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to={userRole === 'admin' ? '/admin' : '/dashboard'} replace />;
   }
 
   return children;
@@ -42,8 +46,11 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 const PublicRoute = ({ children }) => {
   const { user } = useAuth();
 
+  // Normalize role to lowercase for comparison
+  const userRole = user?.role?.toLowerCase();
+
   if (user) {
-    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+    return <Navigate to={userRole === 'admin' ? '/admin' : '/dashboard'} replace />;
   }
 
   return children;
@@ -74,14 +81,11 @@ const AppRouter = () => {
           />
 
           {/* Admin Routes */}
-          <Route 
-            path="/admin" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/admin" element={
+  <ProtectedRoute allowedRoles={['admin']}>
+    <AdminDashboard />
+  </ProtectedRoute>
+} />
           <Route 
             path="/admin/exams" 
             element={
@@ -116,14 +120,20 @@ const AppRouter = () => {
           />
 
           {/* Student Routes */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/dashboard" element={
+  <ProtectedRoute allowedRoles={['student']}>
+    <StudentDashboard />
+  </ProtectedRoute>
+} />
+          
+          <Route
+  path="/profile"
+  element={
+    <ProtectedRoute allowedRoles={['student', 'admin', 'examiner']}>
+      <ProfilePage />
+    </ProtectedRoute>
+  }
+/>
 
           {/* Shared Routes (both admin and student) */}
           <Route 

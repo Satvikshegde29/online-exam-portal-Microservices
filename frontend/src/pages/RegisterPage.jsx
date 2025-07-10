@@ -4,15 +4,17 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
+import Toast from '../components/ui/Toast'; // import the Toast
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
   const [errors, setErrors] = useState({});
+  const [successMsg, setSuccessMsg] = useState('');
   const { register, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -26,8 +28,8 @@ const RegisterPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
     }
 
     if (!formData.email.trim()) {
@@ -58,13 +60,16 @@ const RegisterPage = () => {
     }
 
     const result = await register({
-      name: formData.name,
+      username: formData.username,
       email: formData.email,
       password: formData.password
     });
 
     if (result.success) {
-      navigate('/dashboard');
+      setSuccessMsg(result.message || 'Registration successful');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
     } else {
       setErrors({ submit: result.error });
     }
@@ -98,14 +103,14 @@ const RegisterPage = () => {
             )}
 
             <Input
-              label="Full Name"
-              name="name"
+              label="Username"
+              name="username"
               type="text"
               required
-              value={formData.name}
+              value={formData.username}
               onChange={handleChange}
-              error={errors.name}
-              placeholder="Enter your full name"
+              error={errors.username}
+              placeholder="Enter your username"
             />
 
             <Input
@@ -162,6 +167,8 @@ const RegisterPage = () => {
             </Button>
           </form>
         </Card>
+
+        {successMsg && <Toast message={successMsg} onClose={() => setSuccessMsg('')} />}
       </div>
     </div>
   );

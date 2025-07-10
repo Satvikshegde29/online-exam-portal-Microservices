@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
+import Toast from '../components/ui/Toast'; // import the Toast
 
 const LoginPage = () => {
   const { login, loading } = useAuth();
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,12 +20,23 @@ const LoginPage = () => {
 
     const result = await login(email, password);
     if (result.success) {
-      // Redirect based on role
-      if (email === 'admin@test.com') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      setSuccessMsg(result.message || 'Login successful');
+      setTimeout(() => {
+        // Get user from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role) {
+          if (user.role.toLowerCase() === 'admin') {
+            navigate('/admin');
+          } else if (user.role.toLowerCase() === 'student') {
+            navigate('/dashboard');
+          } else {
+            // fallback for unknown roles
+            navigate('/');
+          }
+        } else {
+          navigate('/');
+        }
+      }, 1500);
     } else {
       setError(result.error);
     }
@@ -106,6 +119,7 @@ const LoginPage = () => {
           </div>
         </Card>
       </div>
+      {successMsg && <Toast message={successMsg} onClose={() => setSuccessMsg('')} />}
     </div>
   );
 };
