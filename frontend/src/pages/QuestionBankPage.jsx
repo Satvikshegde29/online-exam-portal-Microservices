@@ -74,9 +74,10 @@ const QuestionBankPage = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const token = localStorage.getItem('token');
     if (editingQuestion) {
-      // Update existing question
+      // Update existing question (not implemented here, but you can add PUT logic if needed)
       const updatedQuestions = questions.map(q => 
         q.id === editingQuestion.id 
           ? { ...q, ...questionForm }
@@ -85,14 +86,39 @@ const QuestionBankPage = () => {
       setQuestions(updatedQuestions);
       setFilteredQuestions(updatedQuestions);
     } else {
-      // Add new question
-      const newQuestion = {
-        id: Date.now().toString(),
-        ...questionForm
+      // Add new question via backend
+      const payload = {
+        text: questionForm.question,
+        options: questionForm.options,
+        correctAnswer: questionForm.options[questionForm.correctAnswer],
+        category: questionForm.category,
+        difficulty: questionForm.difficulty,
+        marks: questionForm.marks,
+        explanation: questionForm.explanation
       };
-      const newQuestions = [...questions, newQuestion];
-      setQuestions(newQuestions);
-      setFilteredQuestions(newQuestions);
+      const response = await fetch('http://localhost:8090/api/admin/questions', {
+        method: 'POST',
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const newQuestion = await response.json();
+        setQuestions([...questions, {
+          ...newQuestion,
+          question: newQuestion.text, // for UI compatibility
+          id: newQuestion.questionId || Date.now().toString()
+        }]);
+        setFilteredQuestions([...questions, {
+          ...newQuestion,
+          question: newQuestion.text,
+          id: newQuestion.questionId || Date.now().toString()
+        }]);
+      } else {
+        alert('Failed to create question');
+      }
     }
 
     setIsModalOpen(false);
@@ -252,7 +278,7 @@ const QuestionBankPage = () => {
         title={editingQuestion ? 'Edit Question' : 'Add New Question'}
         size="lg"
       >
-        <div className="space-y-4">
+        <div className="w-full max-w-lg rounded-2xl p-6 bg-white mx-auto max-h-[80vh] overflow-y-auto">
           <Input
             label="Question"
             value={questionForm.question}
@@ -264,25 +290,37 @@ const QuestionBankPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
             {questionForm.options.map((option, index) => (
               <div key={index} className="flex items-center space-x-2 mb-2">
-                <input
-                  type="radio"
-                  name="correctAnswer"
-                  checked={questionForm.correctAnswer === index}
-                  onChange={() => setQuestionForm({ ...questionForm, correctAnswer: index })}
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500"
-                />
                 <Input
                   value={option}
                   onChange={(e) => {
                     const newOptions = [...questionForm.options];
                     newOptions[index] = e.target.value;
                     setQuestionForm({ ...questionForm, options: newOptions });
+                    // If the correct answer is now empty, reset correctAnswer
+                    if (questionForm.correctAnswer === index && e.target.value.trim() === '') {
+                      setQuestionForm((prev) => ({ ...prev, correctAnswer: 0 }));
+                    }
                   }}
                   placeholder={`Option ${index + 1}`}
                   className="flex-1"
                 />
               </div>
             ))}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Correct Answer</label>
+            <select
+              value={questionForm.correctAnswer}
+              onChange={e => setQuestionForm({ ...questionForm, correctAnswer: parseInt(e.target.value) })}
+              className="input-field"
+            >
+              {questionForm.options.map((opt, idx) =>
+                opt.trim() !== '' ? (
+                  <option key={idx} value={idx}>{opt}</option>
+                ) : null
+              )}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -335,11 +373,11 @@ const QuestionBankPage = () => {
             />
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div className="flex justify-end space-x-3 pt-4">
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button type="button" onClick={handleSave} className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">
               {editingQuestion ? 'Update Question' : 'Add Question'}
             </Button>
           </div>

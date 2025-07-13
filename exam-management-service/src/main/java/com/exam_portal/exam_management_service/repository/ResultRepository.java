@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ResultRepository extends JpaRepository<Result, Long> {
     Optional<Result> findByExamIdAndUserId(Long examId, Long userId);
     long countByUserId(Long userId);
+    java.util.List<Result> findByUserId(Long userId);
 }

@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import Layout from '../components/layout/Layout';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 
+
 // Pages
 import LandingPage from '../pages/LandingPage';
 import LoginPage from '../pages/LoginPage';
@@ -17,6 +18,10 @@ import ExamManagementPage from '../pages/ExamManagementPage';
 import UserManagementPage from '../pages/UserManagementPage';
 import EnhancedAnalyticsPage from '../pages/EnhancedAnalyticsPage';
 import ProfilePage from '../pages/ProfilePage';
+import AddQuestionsToExamPage from '../pages/AddQuestionsToExamPage';
+import MyExamsPage from '../pages/MyExamsPage';
+import ExamQuestionsPage from '../pages/ExamQuestionsPage';
+import ManageUsersPage from '../pages/ManageUsersPage';
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading } = useAuth();
@@ -118,6 +123,22 @@ const AppRouter = () => {
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/admin/exams/:examId/add-questions" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AddQuestionsToExamPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/manage-users" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ManageUsersPage />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Student Routes */}
           <Route path="/dashboard" element={
@@ -134,6 +155,30 @@ const AppRouter = () => {
     </ProtectedRoute>
   }
 />
+          <Route 
+            path="/my-exams" 
+            element={
+              <ProtectedRoute>
+                <MyExamsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-exams/:examId" 
+            element={
+              <ProtectedRoute>
+                <ExamQuestionsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/results"
+            element={
+              <ProtectedRoute>
+                <AnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Shared Routes (both admin and student) */}
           <Route 
@@ -145,7 +190,7 @@ const AppRouter = () => {
             } 
           />
           <Route 
-            path="/exam/result" 
+            path="/result" 
             element={
               <ProtectedRoute>
                 <ResultPage />

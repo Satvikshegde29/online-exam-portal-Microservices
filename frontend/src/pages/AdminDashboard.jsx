@@ -2,44 +2,53 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { mockExams, mockUsers } from '../utils/mockData';
 
 const AdminDashboard = () => {
-  const [stats] = useState({
-    totalExams: mockExams.length,
-    totalUsers: mockUsers.length,
-    activeExams: mockExams.filter(exam => exam.status === 'active').length,
-    totalQuestions: 45
+  const [stats, setStats] = useState({
+    totalExams: 0,
+    totalUsers: 0, // keep as is unless you have backend for users
+    activeExams: 0,
+    totalQuestions: 0
   });
   const [exams, setExams] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [filteredExams, setFilteredExams] = useState([]);
 
-  const recentExams = mockExams.slice(0, 3);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     fetch('http://localhost:8090/api/admin/exams', {
       headers: {
-        'Authorization': token ? `Bearer ${token}` : undefined,
+        'Authorization': token,
         'Content-Type': 'application/json'
       }
     })
-      .then(res => {
-        if (!res.ok) {
-          return res.text().then(text => { throw new Error(text || res.statusText); });
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
         setExams(data);
         setFilteredExams(data);
-      })
-      .catch(err => {
-        console.error('Fetch error:', err.message);
-        // Optionally show an error message to the user
+        setStats(prev => ({
+          ...prev,
+          totalExams: data.length,
+          activeExams: data.filter(exam => exam.status === 'active').length
+        }));
+      });
+    fetch('http://localhost:8090/api/admin/questions', {
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setQuestions(data);
+        setStats(prev => ({ ...prev, totalQuestions: data.length }));
       });
   }, []);
+
+  // Show last three recently added exams (most recent first)
+  const recentExams = [...exams].reverse().slice(0, 3);
 
   return (
     <div className="space-y-8">
@@ -54,7 +63,7 @@ const AdminDashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card variant="floating" className="text-center">
-          <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">{stats.totalExams}</div>
+          <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">{exams.length}</div>
           <div className="text-sm text-gray-600">Total Exams</div>
           <div className="w-full bg-blue-100 rounded-full h-2 mt-3">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full" style={{ width: '75%' }}></div>
@@ -78,7 +87,7 @@ const AdminDashboard = () => {
         </Card>
         
         <Card variant="floating" className="text-center">
-          <div className="text-4xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-2">{stats.totalQuestions}</div>
+          <div className="text-4xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-2">{questions.length}</div>
           <div className="text-sm text-gray-600">Questions</div>
           <div className="w-full bg-orange-100 rounded-full h-2 mt-3">
             <div className="bg-gradient-to-r from-orange-500 to-red-500 h-2 rounded-full" style={{ width: '90%' }}></div>
@@ -91,28 +100,24 @@ const AdminDashboard = () => {
         <Card variant="floating">
           <h2 className="text-xl font-semibold mb-6 gradient-text">Recent Exams</h2>
           <div className="space-y-4">
-            {recentExams.map((exam) => (
-              <div key={exam.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 hover:shadow-lg transition-all duration-300">
-                <div>
-                  <p className="font-medium text-gray-900">{exam.title}</p>
-                  <p className="text-sm text-gray-600">{exam.category} • {exam.duration} min</p>
+            {recentExams.length === 0 ? (
+              <div className="text-gray-400 text-center">No exams found.</div>
+            ) : (
+              recentExams.map((exam) => (
+                <div key={exam.examId || exam.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 hover:shadow-lg transition-all duration-300">
+                  <div>
+                    <p className="font-medium text-gray-900">{exam.title}</p>
+                  </div>
                 </div>
-                <span className={`px-3 py-1 text-xs rounded-full font-medium ${
-                  exam.status === 'active' 
-                    ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800'
-                    : 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800'
-                }`}>
-                  {exam.status}
-                </span>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </Card>
 
         <Card variant="floating">
           <h2 className="text-xl font-semibold mb-6 gradient-text">Quick Actions</h2>
           <div className="space-y-4">
-            <Button className="w-full justify-start text-left" variant="outline">
+            <Button className="w-full justify-start text-left" variant="outline" onClick={() => navigate('/admin/exams')}>
               <span className="mr-3">📝</span>
               Create New Exam
             </Button>
@@ -120,7 +125,7 @@ const AdminDashboard = () => {
               <span className="mr-3">❓</span>
               Add Questions
             </Button>
-            <Button className="w-full justify-start text-left" variant="outline">
+            <Button className="w-full justify-start text-left" variant="outline" onClick={() => navigate('/admin/manage-users')}>
               <span className="mr-3">👥</span>
               Manage Users
             </Button>

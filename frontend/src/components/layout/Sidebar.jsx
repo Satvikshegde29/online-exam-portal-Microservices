@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   const studentNavItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '🏠' },
-    { name: 'My Exams', path: '/dashboard/exams', icon: '📚' },
+    { name: 'My Exams', path: '/my-exams', icon: '📚' },
     { name: 'Results', path: '/dashboard/results', icon: '🏆' },
     { name: 'Profile', path: '/profile', icon: '👤' }
   ];
