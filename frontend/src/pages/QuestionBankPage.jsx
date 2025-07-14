@@ -93,25 +93,64 @@ const QuestionBankPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (questionId) => {
+  const handleDelete = async (questionId) => {
     if (window.confirm('Are you sure you want to delete this question?')) {
-      const newQuestions = questions.filter(q => q.id !== questionId);
-      setQuestions(newQuestions);
-      setFilteredQuestions(newQuestions);
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`http://localhost:8090/api/admin/questions/${questionId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (!response.ok) {
+          alert('Failed to delete question');
+          return;
+        }
+        const newQuestions = questions.filter(q => q.id !== questionId);
+        setQuestions(newQuestions);
+        setFilteredQuestions(newQuestions);
+      } catch (e) {
+        alert('An error occurred while deleting the question.');
+      }
     }
   };
 
   const handleSave = async () => {
     const token = localStorage.getItem('token');
     if (editingQuestion) {
-      // Update existing question (not implemented here, but you can add PUT logic if needed)
-      const updatedQuestions = questions.map(q => 
-        q.id === editingQuestion.id 
-          ? { ...q, ...questionForm }
-          : q
-      );
-      setQuestions(updatedQuestions);
-      setFilteredQuestions(updatedQuestions);
+      // Update existing question via backend
+      const payload = {
+        text: questionForm.question,
+        options: questionForm.options,
+        correctAnswer: questionForm.options[questionForm.correctAnswer],
+        category: questionForm.category,
+        difficulty: questionForm.difficulty,
+        marks: questionForm.marks,
+        explanation: questionForm.explanation
+      };
+      const response = await fetch(`http://localhost:8090/api/admin/questions/${editingQuestion.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        const updatedQuestions = questions.map(q =>
+          q.id === editingQuestion.id
+            ? { ...updated, question: updated.text, id: updated.questionId || updated.id }
+            : q
+        );
+        setQuestions(updatedQuestions);
+        setFilteredQuestions(updatedQuestions);
+      } else {
+        alert('Failed to update question');
+        return;
+      }
     } else {
       // Add new question via backend
       const payload = {
