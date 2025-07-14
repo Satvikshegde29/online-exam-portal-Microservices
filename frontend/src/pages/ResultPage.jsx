@@ -69,7 +69,11 @@ const ResultPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {allResults.length === 0 ? (
+                                        {loading ? (
+                                            <tr>
+                                                <td colSpan={6} className="text-center py-4 text-gray-500">Loading all results...</td>
+                                            </tr>
+                                        ) : allResults.length === 0 ? (
                                             <tr>
                                                 <td colSpan={6} className="text-center py-4 text-gray-500">No results found.</td>
                                             </tr>

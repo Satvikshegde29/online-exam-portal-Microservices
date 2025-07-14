@@ -3,13 +3,11 @@ import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
   const { user } = useAuth();
+  console.log('Sidebar user:', user);
 
   const adminNavItems = [
     { name: 'Dashboard', path: '/admin', icon: '📊' },
     { name: 'Exams', path: '/admin/exams', icon: '📝' },
-    { name: 'Questions', path: '/admin/questions', icon: '❓' },
-    { name: 'Users', path: '/admin/users', icon: '👥' },
-    { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
     { name: 'Profile', path: '/profile', icon: '👤' }
   ];
 
@@ -20,7 +18,7 @@ const Sidebar = () => {
     { name: 'Profile', path: '/profile', icon: '👤' }
   ];
 
-  const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems;
+  const navItems = user?.role?.toLowerCase() === 'admin' ? adminNavItems : studentNavItems;
 
   return (
     <div className="w-64 sidebar-gradient h-full">

@@ -174,7 +174,7 @@ const AppRouter = () => {
           <Route 
             path="/dashboard/results"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['student']}>
                 <AnalyticsPage />
               </ProtectedRoute>
             }
@@ -192,7 +192,7 @@ const AppRouter = () => {
           <Route 
             path="/result" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['student']}>
                 <ResultPage />
               </ProtectedRoute>
             } 
